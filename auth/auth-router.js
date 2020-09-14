@@ -28,8 +28,16 @@ router.post('/register', (req, res) => {
     }
 });
 
+router.post('/login', (req, res) => {
+
+});
+
 function validateUser(user) {
     return user.username && user.password && user.role ? true : false;
+}
+
+function validateCredentials(creds) {
+    return creds.username && creds.password ? true : false;
 }
 
 module.exports = router;

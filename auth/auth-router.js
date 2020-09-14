@@ -29,7 +29,31 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
+    const creds = req.body;
+    const isValid = validateCredentials(creds);
 
+    if(isValid) {
+        Users.findBy({ username: creds.username })
+            .then(([user]) => {
+                if (user && bcryptjs.compareSync(creds.password, user.password)) {
+                    req.session.username = user.name;
+                    req.session.role = user.role;
+
+                    res.status(200).json({
+                        message: `welcome ${creds.username}`,
+                    });
+                } else {
+                    res.status(401).json({ message: 'you shall not pass!' });
+                }
+            })
+            .catch(error => {
+                res.status(500).json({ error: error.message });
+            });
+    } else {
+        res.status(400).json({
+            message: 'Invalid information, please verify and try again',
+        });
+    }
 });
 
 function validateUser(user) {

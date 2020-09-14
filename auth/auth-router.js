@@ -36,7 +36,7 @@ router.post('/login', (req, res) => {
         Users.findBy({ username: creds.username })
             .then(([user]) => {
                 if (user && bcryptjs.compareSync(creds.password, user.password)) {
-                    req.session.username = user.name;
+                    req.session.username = user.username;
                     req.session.role = user.role;
 
                     res.status(200).json({

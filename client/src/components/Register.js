@@ -8,36 +8,37 @@ const initFormValues = {
 
 export default function Register() {
   const [formValues, setFormValues] = useState(initFormValues);
-  const [user, setUser] = useState();
-  const ENDPOINT = 'localhost:5000/register';
+  const ENDPOINT = 'http://localhost:5000/api/auth/register';
 
   const onChange = e => {
     const { name } = e.target;
     const { value } = e.target;
 
-    setFormValues({ [name]: value })
+    setFormValues({...formValues, [name]: value })
+    console.log(formValues);
   }
 
   const onValueChange = e => {
     const { value } = e.target;
 
-    setFormValues({ role: value })
+    setFormValues({...formValues, role: value })
+    console.log(formValues);
   }
 
   const onSubmit = e => {
-    const user = {
+    e.preventDefault();
+    axios.post(ENDPOINT, {
       username: formValues.username.trim(),
       password: formValues.password.trim(),
       role: formValues.role,
-    }
-
-    axios.post(ENDPOINT, user)
+    })
       .then(res => {
-        setUser(res.data)
+        console.log(res.data);
       })
       .catch(error => {
         console.log(error);
       });
+      setFormValues(initFormValues);
   }
 
   return (
@@ -58,7 +59,7 @@ export default function Register() {
             name='password'
             value={ formValues.password }
             placeholder='password'
-            onChange={ onValueChange }
+            onChange={ onChange }
           />
           <div className='radio-container'>
             <label>admin
@@ -66,8 +67,7 @@ export default function Register() {
                 className='radio'
                 type='radio'
                 name='role'
-                value='admin'
-                checked={ role === 1 }
+                value={ 1 }
                 onChange={ onValueChange }
               />
             </label>
@@ -76,8 +76,7 @@ export default function Register() {
                 className='radio'
                 type='radio'
                 name='role'
-                value='user'
-                checked={ role === 2 }
+                value={ 2 }
                 onChange={ onValueChange }
               />
             </label>

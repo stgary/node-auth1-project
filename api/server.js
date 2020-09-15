@@ -30,12 +30,15 @@ const sessionConfig = {
         clearInterval: 1000 * 60 * 60, // remove expired sessions every hour
     }),
 };
-
 server.use(helmet());
 server.use(express.json());
-server.use(cors());
+server.use(cors({
+    origin: 'http://localhost:3000',
+    methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
+    credentials: true
+  }));
 server.use(session(sessionConfig));
-
+  
 server.use("/api/users", protected, usersRouter);
 server.use("/api/auth", authRouter);
 
